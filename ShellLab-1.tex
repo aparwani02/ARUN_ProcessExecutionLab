@@ -1,0 +1,176 @@
+\documentclass[12pt]{article}
+\usepackage{hyperref}
+
+\begin{document}
+
+\section*{Semester 1, Lab 3 : The Shell : Parsing}
+This lab begins the shell and will be continued in future labs, so make sure that you program in such a way to be flexible.  We start with parsing user input into smaller units (called ``Processes'') so that we can manipulate them in future labs.  Programmatically, we are going to be exploring classes, signals, and other advanced concepts in your preferred language.
+
+\section*{Concepts}
+\begin{itemize}
+\item Classes
+\item Signal Handling
+\item Parsing Strings
+\item String representations and streams
+\item Exceptions
+\item Unit Testing
+\end{itemize}
+
+\section*{Lab Instructions}
+\begin{enumerate}
+\item Create a git repository called {\em NAME}\_Shell
+\item Create the ``standard'' setup for your language
+	\begin{enumerate}
+	\item Python: module should be called ``shell''
+	\item C++: use the src and include directories
+	\end{enumerate}
+\item Complete the program described in this lab.
+\item Add unit tests for parsing strings into Processes
+\end{enumerate}
+
+\section*{Project Description}
+\begin{itemize}
+\item Create a README.md that provides a description of the program and an explanation of special characters for your shell
+\item Your program must continually prompt the user (`$>$') for one line of input.
+\item If the user inputs Control-D by itself, then the program must exit
+\item If the user inputs Control-C, then the program outputs ``Shell Exiting...'' and exits
+\item Dissect the line to create a group of processes such that:
+	\begin{enumerate}
+	\item processes are separated by one of \{$|$, $<$, $>$\}
+	\item \label{wordSep} words can be separated by one of \{$|$,$<$,$>$\} or a space
+	\item the first word in a process is its command
+	\item all words after the first, up to the end of a process, are arguments for the process
+	\item single quotes and double quotes surround one ``word'', ignore characters from Item \ref*{wordSep} above, and must match to be complete
+	\item matched quotes are not included in the argument or command
+	\item Empty words and processes should be ignored
+	\end{enumerate}
+\item If quotes are mismatched, the program should print ``Mismatched Quotes''
+\item After each input, your program should output the following for each process:
+	\begin{itemize}
+	\item Process $<$NUMBER$>$
+	\item Command: $<$COMMAND$>$
+	\item Arguments:
+	\item 0: $<$ARG0$>$
+	\item 1: $<$ARG1$>$
+	\item ...
+	\end{itemize}
+\item Have at least six distinct unit test cases to test your parsing function
+\end{itemize}
+
+\section*{Coding Specifics}
+\begin{itemize}
+\item You must have a class called {\em Process}:
+	\begin{enumerate}
+	\item Separate from other files
+		\begin{enumerate}
+		\item (Python) process.py
+		\item (C++) process.h and process.cpp
+		\end{enumerate}
+	\item attributes: command and an array of arguments
+	\item a method to return a String representation of the process
+		\begin{enumerate}
+		\item (Python) See the \_\_str\_\_ method
+		\item (C++) Overload the std::string casting operator
+		\item (C++) Include a friend function to overload the $<<$ operator for printing to an ostream
+		\end{enumerate}
+	\end{enumerate}
+\item Have at least one function to parse a string into an array of Process objects
+	\begin{enumerate}
+	\item Takes one string argument
+	\item returns and array of Process objects
+	\item if the quotes mismatch, throw an exception and print the error in the main driver
+	\end{enumerate}
+\end{itemize}
+
+\section*{Grading}
+\begin{itemize}
+\item (1pt) Correct final README.md
+\item (4pt) Complete Process Class
+	\begin{itemize}
+	\item (1pt) Proper file setup
+	\item (1pt) Proper class setup
+	\item (2pt) Proper string conversion
+	\end{itemize}
+\item (10pt) Parsing function
+	\begin{itemize}
+	\item (5pt) Separates Processes correctly
+	\item (3pt) Handles quotes correctly
+	\item (2pt) Exception thrown and handled properly 
+	\end{itemize}
+\item (2pt) Handles Control-D and Control-C properly
+\item (2pt) Proper output after each input
+\item (4pt) Test cases
+\item (2pt) Program design and comments
+\end{itemize}
+
+\section*{Sample Outputs}
+
+\noindent {\bf Inputs 1:}
+\begin{verbatim}
+ls | ps aux | du -d 1 -h
+ls|ps aux|du -d 1 -h
+ls |ps aux | du -d 1 -h
+\end{verbatim}
+
+\noindent {\bf Output 1:}
+\begin{verbatim}
+----------------
+Process 0
+----------------
+Command: ls
+Arguments:
+
+----------------
+Process 1
+----------------
+Command: ps
+Arguments:
+0: aux
+
+----------------
+Process 2
+----------------
+Command: du
+Arguments:
+0: -d
+1: 1
+2: -h
+\end{verbatim}
+
+\hrulefill
+
+\noindent {\bf Input 2:}
+\begin{verbatim}
+ls "Welcome to | the jungle" | ps aux
+\end{verbatim}
+
+\noindent {\bf Output 2:}
+\begin{verbatim}
+----------------
+Process 0
+----------------
+Command: ls
+Arguments:
+0: Welcome to | the jungle
+
+----------------
+Process 1
+----------------
+Command: ps
+Arguments:
+0: aux
+\end{verbatim}
+
+\hrulefill
+
+\noindent {\bf Input 3:}
+\begin{verbatim}
+ls "Welcome to | the jungle | ps aux
+\end{verbatim}
+
+\noindent {\bf Output 3:}
+\begin{verbatim}
+Error: Mismatched quotes
+\end{verbatim}
+
+\end{document}
