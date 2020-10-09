@@ -1,42 +1,45 @@
-SRCDIR = src
-OBJSDIR = build
-INCLUDESDIR = include
-TESTDIR = tests
-
-SOURCES = shell_utils.cpp process.cpp main.cpp
-TESTS = test_parseProcess.cpp
-OBJECTS = $(SOURCES:.cpp=.o)
 TARGET = shell
+
+SRCDIR = ./src
+BUILDDIR = ./build
+INCLUDESDIR = ./include
+TESTDIR = ./tests
+
+# Find all the cpp files for sources
+SOURCES = $(wildcard $(SRCDIR)/*.cpp)
+
+# Substitute .cpp with .o for the generic build rule
+OBJS = $(SOURCES:$(SRCDIR)/%.cpp=%.o)
+
+# Gather tests
+TESTS = $(wildcard $(TESTDIR)/test_*.cpp)
+# CPP files required for the tests
+TESTSCPP = $(SRCDIR)/process.cpp
+
 
 CXX = g++
 CXXFLAGS = -Wall -g -I$(INCLUDESDIR)
 
-all: directories shell 
+all: directories $(TARGET)
 
 directories:
-	mkdir -p $(OBJSDIR)
+	mkdir -p $(BUILDDIR)
 
 # Create the program binary
-$(TARGET): $(OBJECTS)
+$(TARGET): $(OBJS)
 	$(CXX) $(CXXFLAGS) -o $(TARGET) \
-			$(OBJSDIR)/*.o
+			$(BUILDDIR)/*.o
 
-# Compile rules for each dependecy
-main.o: $(SRCDIR)/main.cpp
-	$(CXX) $(CXXFLAGS) -c -o $(OBJSDIR)/main.o $(SRCDIR)/main.cpp
-
-process.o: $(SRCDIR)/process.cpp
-	$(CXX) $(CXXFLAGS) -c -o $(OBJSDIR)/process.o $(SRCDIR)/process.cpp
-
-shell_utils.o: $(SRCDIR)/shell_utils.cpp
-	$(CXX) $(CXXFLAGS) -c -o $(OBJSDIR)/shell_utils.o $(SRCDIR)/shell_utils.cpp
+# Generic .cpp to .o rule
+%.o: $(SRCDIR)/%.cpp
+	$(CXX) $(CXXFLAGS) -c $< -o $(BUILDDIR)/$@
 
 # Make the test_runner
-test: $(TESTDIR)/test_parseProcess.cpp $(SRCDIR)/process.cpp
-	$(CXX) $(CXXFLAGS) -Isrc/ -o test_runner $(TESTDIR)/test_*.cpp $(SRCDIR)/process.cpp
+test: $(TESTS) $(TESTSCPP)
+	$(CXX) $(CXXFLAGS) -Isrc/ -o test_runner $^
 
 # Rule to clean up intermediate file and executable
 clean:
-	rm -rf $(OBJSDIR)
+	rm -rf $(BUILDDIR)
 	rm -f $(TARGET) test_runner *.o
 	
