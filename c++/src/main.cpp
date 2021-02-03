@@ -12,7 +12,7 @@ int main( int argc, char* argv[] ){
     std::string input;
     std::cout<<"> ";
     // Grab a line of input.  The loop doesn't run when Control-D is input.
-    while( getline(std::cin, input)){
+    while(getline(std::cin, input)){
         input += '\n';
 
         try {
@@ -37,8 +37,7 @@ int main( int argc, char* argv[] ){
             std::cerr << "Error: " << oor.what() << std::endl;
         }
         
-        std::cout<<"> ";
-        
+        std::cout<<"> ";  
     }
 
     return 0;

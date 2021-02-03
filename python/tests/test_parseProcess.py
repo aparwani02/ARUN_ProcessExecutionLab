@@ -6,6 +6,7 @@ class ParseProcessTester(unittest.TestCase):
     # Verify Correct Number of Processes Parsed
     def test_countProcesses_1_noArgs(self):
         processes = parseProcesses("du")
+        self.assertEqual(processes[0].command, "du")
         self.assertEqual(len(processes), 1)
         self.assertEqual(len(processes[0].arguments), 0)
 
@@ -59,7 +60,10 @@ class ParseProcessTester(unittest.TestCase):
         processes_1 = parseProcesses('du -l <ps aux >grep argument')
         self.assertEqual(len(processes_1), 3)
 
-        
+    def test_countProcesses_3_middleManySpaces(self):
+        processes_1 = parseProcesses('   du -l |ps        aux |grep argument')
+        self.assertEqual(len(processes_1), 3)
+
     def test_countProcesses_3_greaterThanLessThan(self):
         processes_1 = parseProcesses('du -l > ps aux <grep argument')
         self.assertEqual(len(processes_1), 3)
@@ -107,10 +111,10 @@ class ParseProcessTester(unittest.TestCase):
 
     # Cause Mismatched Exceptions to occur
     def test_mismatch_quotes(self):
-        self.assertRaises(Exception, parseProcesses, 'du \"mismatch')
+        self.assertRaises(Exception, parseProcesses, 'du "mismatch')
     
     def test_mismatch_quotes_2(self):
-        self.assertRaises(Exception, parseProcesses, 'du \"mismatch | welcome')
+        self.assertRaises(Exception, parseProcesses, 'du "mismatch | welcome')
 
     def test_mismatch_quotes_3(self):
-        self.assertRaises(Exception, parseProcesses, 'du \"mismatch | welcome\" | ps welcome \"bob')
+        self.assertRaises(Exception, parseProcesses, 'du "mismatch | welcome" | ps welcome "bob')

@@ -1,6 +1,8 @@
-#include "process.h"
+#include<vector>
+#include<string>
+#include<sstream>
 
-#include <sstream>
+#include "process.h"
 
 Process::Process(const std::string &command) {
     this->command = command;

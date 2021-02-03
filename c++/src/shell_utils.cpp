@@ -31,7 +31,6 @@ std::vector<Process> parseString(std::string input ){
         input += '\n';
     }
     
-    
     std::vector<Process> processes;
 
     // Create our first process to populate

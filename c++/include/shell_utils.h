@@ -1,5 +1,5 @@
-#ifndef _UTILS_H_
-#define _UTILS_H_
+#ifndef _SHELL_UTILS_H_
+#define _SHELL_UTILS_H_
 
 #include <vector>
 #include <string>
@@ -23,6 +23,6 @@ void handle_SIGINT(int signum);
  * @return a series of populated Processes
  * @throw out_of_range if any quotes are mismatched
  */
-std::vector<Process> parseString(std::string input );
+std::vector<Process> parseString(std::string input);
 
 #endif

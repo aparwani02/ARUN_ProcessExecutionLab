@@ -17,6 +17,12 @@ class Process {
         std::vector<std::string> arguments;
 
     public:
+    /**
+     * Construcors
+     * 
+     * @param command the command to run
+     * @param argument one or more arguments to add to the process
+     */
         Process(const std::string &command = "");
         Process(const std::string &command, const std::string argument);
         Process(const std::string &command, const std::vector<std::string> &arguments);
@@ -73,7 +79,7 @@ class Process {
         /**
          * Overload the [] operator to access specfic arguments
          * @return a read-only version of the argument requested
-         * @throw out_of_range exceptif if the index is outside the list 
+         * @throw out_of_range except if the index is outside the list 
          */
         const std::string &operator[](long unsigned index) const;
 
